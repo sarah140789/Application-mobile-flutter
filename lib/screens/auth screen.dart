@@ -5,20 +5,19 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/auth.dart';
-import '../models/http_exception.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 enum AuthMode { Signup, Login }
-
+String _Erreur="NO";
+String _Email="user@gmail.com";
+String _Uid="user";
 class AuthScreen extends StatelessWidget {
   static const routeName = '/auth';
 
   @override
   Widget build(BuildContext context) {
     final deviceSize = MediaQuery.of(context).size;
-    // final transformConfig = Matrix4.rotationZ(-8 * pi / 180);
-    // transformConfig.translate(-10.0);
     return Scaffold(
-      // resizeToAvoidBottomInset: false,
       body: Stack(
         children: <Widget>[
           Container(
@@ -103,6 +102,8 @@ class _AuthCardState extends State<AuthCard>
     'email': '',
     'password': '',
   };
+
+  SharedPreferences myPrefs;
   var _isLoading = false;
   final _passwordController = TextEditingController();
   AnimationController _controller;
@@ -111,6 +112,7 @@ class _AuthCardState extends State<AuthCard>
 
   @override
   void initState() {
+    super.initState();
     _controller = AnimationController(
       duration: Duration(milliseconds: 300),
       vsync: this,
@@ -120,25 +122,32 @@ class _AuthCardState extends State<AuthCard>
     _slideAnimation = Tween<Offset>(begin: Offset(0, -1.5), end: Offset(0, 0))
         .animate(
             CurvedAnimation(parent: _controller, curve: Curves.bounceInOut));
-    super.initState();
+
+    SharedPreferences.getInstance().then((myPrefs) => {
+      setState(() {
+      _Erreur = myPrefs.getString('erreur');
+      })
+    });
+
   }
 
-  void _showErrorDialog(String message) {
+  void _showErrorDialog(String message) {;
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Une erreur est survenue!'),
+        title: Text('Probleme Authentification!'),
         content: Text(message),
         actions: <Widget>[
           FlatButton(
               onPressed: () {
                 Navigator.of(ctx).pop();
               },
-              child: Text('Okay'))
+              child: Text('Ok'))
         ],
       ),
     );
   }
+
 
   Future<void> _submit() async {
     if (!_formKey.currentState.validate()) {
@@ -154,32 +163,17 @@ class _AuthCardState extends State<AuthCard>
           _authData['email'],
           _authData['password'],
         );
+        _Erreur=await Provider.of<Auth>(context, listen: false).erreur;
+        //_Uid=await Provider.of<Auth>(context, listen: false).userId;
+        if(_Erreur.length>3) _showErrorDialog(_Erreur);
       } else {
         await Provider.of<Auth>(context, listen: false).signup(
           _authData['email'],
           _authData['password'],
         );
       }
-    } on HttpException catch (error) {
-      var errorMessage = 'Authentication failed!';
-      if (error.toString().contains('EMAIL_EXISTS')) {
-        errorMessage = 'This Email-id is already in use.';
-      } else if (error.toString().contains('INVALID_EMAIL')) {
-        errorMessage =
-            'This Email-id is not valid. Please enter a valid Email-id!';
-      } else if (error.toString().contains('WEAK_PASSWORD')) {
-        errorMessage =
-            'This Password is too weak. Please enter a strong Password';
-      } else if (error.toString().contains('EMAIL_NOT_FOUND')) {
-        errorMessage = 'Could not find an user with this Email-id.';
-      } else if (error.toString().contains('INVALID_PASSWORD')) {
-        errorMessage = 'Invalid Password. Please enter valid Password';
-      }
-      _showErrorDialog(errorMessage);
-    } catch (error) {
-      const errorMessage =
-          'Could not authenticate you. Please check your connection and try again later';
-      _showErrorDialog(errorMessage);
+    } on Error catch (error) {
+        print("erreur de login");
     }
 
     setState(() {
@@ -227,7 +221,7 @@ class _AuthCardState extends State<AuthCard>
                   keyboardType: TextInputType.emailAddress,
                   validator: (value) {
                     if (value.isEmpty || !value.contains('@')) {
-                      return "Invalid email!";
+                      return "Invalide email!";
                     }
                     return null;
                   },
