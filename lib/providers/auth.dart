@@ -1,32 +1,31 @@
 import 'dart:convert';
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../models/http_exception.dart';
 
 class Auth with ChangeNotifier {
-  String _token;
   DateTime _expiryDate;
   String _userId;
+  String _erreur;
   Timer _authTimer;
 
-
   final FirebaseAuth _auth = FirebaseAuth.instance;
-
 
   bool get isAuth {
     return _userId != null;
   }
 
-
   String get userId {
     return _userId;
   }
+
+  String get erreur {
+    return _erreur;
+  }
+
 
   Future<void> signup(String email, String password) async {
     try {
@@ -59,11 +58,13 @@ class Auth with ChangeNotifier {
     } catch (e) {
       print(e);
     }
-
     notifyListeners();
   }
 
   Future<String> login(final String email, final String password) async {
+    final myPrefs = await SharedPreferences.getInstance();
+    String erreur="No";
+    myPrefs.setString("email", email);
     try {
       UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: email,
@@ -74,19 +75,17 @@ class Auth with ChangeNotifier {
       this._userId=user.uid;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
-        print('Aucun utilisateur enregistré avec cet email.');
+        erreur="Aucun utilisateur enregistré avec cet email ";
       } else if (e.code == 'wrong-password') {
-        print('Mot de passe incorrecte.');
+        erreur="Mauvais Mot de Passe  ";
       }
     }
+    this._erreur=erreur;
+    myPrefs.setString("erreur", erreur);
     notifyListeners();
     return _userId;
   }
 
-
-
-  Future<void> signIn(String email, String password) async {
-  }
 
   Future<void> TraceUser(String email, String userid,String action) async {
     await FirebaseFirestore.instance.collection("users").add({
@@ -97,9 +96,7 @@ class Auth with ChangeNotifier {
     });
   }
 
-
   Future<void> logout() async {
-    _token = null;
     _userId = null;
     _expiryDate = null;
     if (_authTimer != null) {
@@ -131,7 +128,6 @@ class Auth with ChangeNotifier {
     if (expiryDate.isBefore(DateTime.now())) {
       return false;
     }
-    _token = extractedUserData['token'];
     _userId = extractedUserData['userId'];
     _expiryDate = expiryDate;
     notifyListeners();
