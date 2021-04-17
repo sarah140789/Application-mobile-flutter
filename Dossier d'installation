@@ -1,1 +1,17 @@
+Sous Windows
+Installation de Android Studio
 
+Télécharger la dernière version d’Android Studio sur le site officiel. Il s’agit d’un simple .exe comme n’importe quelle application.
+À l’installation, ne touchez pas aux paramètres par défaut. 
+
+Installation de Flutter
+
+Commencez par accéder au site flutter.dev.
+Une fois arrivé(e) sur le site, cliquez en haut à droite sur « Get started ».
+La page « Install » s’affiche. Cliquez sur Windows. On arrive sur la documentation que l’on va beaucoup utiliser :
+Pour installer Git, faites un clic droit sur le lien pour l’ouvrir dans un nouvel onglet. Une fois arrivé(e) sur la page vous pourrez choisir votre système d’exploitation (Windows 64bit ou Windows 32bit) et lancer le téléchargement.
+Pour l’installation, cliquez sur « Next » à chaque fenêtre, à moins d’avoir des préférences spécifiques d’installation.
+Afin de vérifier que l’installation s’est bien déroulée, on va chercher l’invite de commande dans le menu Démarrer.
+Pour ce faire, il faut créer un dossier à l’emplacement de votre choix, « Mes Documents » par exemple. Appelons le dossier « dev ».
+C’est dans ce dossier que l’on va installer Flutter. Faites un clic droit sur le dossier créé et sélectionnez « Git Bash here » pour lancer l’invite de commande de Git, puis tapez la commande indiquée sur le site flutter.dev :
+git clone https://github.com/flutter/flutter.git -b stable
