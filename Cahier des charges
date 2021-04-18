@@ -1,1 +1,69 @@
+Méthodologie Agile
+
+Formation/Environnement
+Flutter, Android Studio(1 semaine)
+Point chaque semaine jeudi 15 h
+Livrable APK
+
+
+CAHIER DES CHARGES
+
+1_Application: Dr ASSABAN BITAN
+
+Disposition d'une application à une clientèle de dentiste permettantde gérer les rendez-vous.
+Prise de rendez-vous.
+Aide au diagnostique.
+Présentez l'état des avancées en implantologie.
+Application Android sous Flutter avec Firebase (éventuellement mise à disposition sous IOS et client Web).
+
+2_Module d'authentification
+
+Controle local sur les champs email et password.
+Controle Firebase sur le mail/login.
+Gestion des erreurs pas popup.
+Module d'inscription.
+
+3_Module d'insription
+
+Controle en local des champs.
+Confirmation Firebase du compte par envoi d'un mail de validation.
+
+4_Acceuil sur la page des News(structure)
+
+   Menu
+.News Docteur
+.Demande de RDV
+.Historique
+.Visio detéction
+.Implantologie
+.Laser
+.Déconnexion
+
+5_News(structure)
+
+Liste des nouvelles triées par date .
+
+6_Demande de RDV(structure)
+
+Type de rendez-vous.
+Déscription de la demande.
+Information urgence.
+Niveau de douleur.
+Date.
+Mutuelle, Assurance, ...
+
+7_Historique(structure)
+
+Liste des rendez-vous déja passés triés par date .
+
+8_Visio détection
+
+Analyse vidéo des images.
+
+9_Implantologie(structure)
+
+Nouveautés et innovations.
+Article 1
+...
+
 
