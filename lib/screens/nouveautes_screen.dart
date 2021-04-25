@@ -31,7 +31,7 @@ class NouveautesScreenState extends State<NouveautesScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('NOUVEAUTES'),
+        title: const Text('IMPLANTOLOGIE'),
         actions: <Widget>[
           PopupMenuButton(
             itemBuilder: (_) => [
@@ -50,19 +50,7 @@ class NouveautesScreenState extends State<NouveautesScreen> {
               });
             },
           ),
-          Consumer<Cart>(
-            builder: (_, cart, child) => Badge(
-              child: child,
-              value: cart.count.toString(),
-            ),
-            child: IconButton(
-                icon: Icon(
-                  Icons.shopping_cart,
-                ),
-                onPressed: () {
-                  Navigator.of(context).pushNamed(CartScreen.routeName);
-                }),
-          )
+
         ],
       ),
       drawer: MainDrawer(),
@@ -78,7 +66,7 @@ class HogeApp extends StatelessWidget {
     // <1> Use FutureBuilder
     return FutureBuilder<QuerySnapshot>(
       // <2> Pass `Future<QuerySnapshot>` to future
-        future: FirebaseFirestore.instance.collection('rdv').get(),
+        future: FirebaseFirestore.instance.collection('news implant').get(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
             // <3> Retrieve `List<DocumentSnapshot>` from snapshot
@@ -87,8 +75,14 @@ class HogeApp extends StatelessWidget {
                 children: documents
                     .map((doc) => Card(
                   child: ListTile(
-                    title: Text(doc['title']+' du '+doc['jour']+' '+doc['nbjour']+' '+doc['mois']+' '+doc['annee']),
-                    subtitle: Text(doc['description']),
+                    leading: ConstrainedBox(
+                        constraints:
+                        BoxConstraints(minWidth: 100, minHeight: 100),
+                        child: new Image.asset('assets/images/index.jpg',width: 100,
+                          height: 100,
+                        )),
+                    title: Text(doc['title']),
+                    subtitle: Text(doc['implant']),
                   ),
                 ))
                     .toList());

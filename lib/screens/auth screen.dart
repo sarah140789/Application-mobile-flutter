@@ -135,14 +135,17 @@ class _AuthCardState extends State<AuthCard>
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        title: Text('Probleme Authentification!'),
+        title: Text('Authentification'),
         content: Text(message),
+        backgroundColor: Color.fromRGBO(204, 255, 1, 1).withOpacity(0.9),
+        shape:
+        RoundedRectangleBorder(borderRadius: new BorderRadius.circular(15)),
         actions: <Widget>[
           FlatButton(
               onPressed: () {
                 Navigator.of(ctx).pop();
               },
-              child: Text('Ok'))
+              child: Text('Ok'),textColor: Colors.redAccent),
         ],
       ),
     );

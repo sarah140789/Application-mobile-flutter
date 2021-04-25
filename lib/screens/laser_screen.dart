@@ -15,13 +15,13 @@ enum FilterOptions {
   All,
 }
 
-class NewScreen extends StatefulWidget {
+class LaserScreen extends StatefulWidget {
+  static const routeName = '/laser';
   @override
-  static const routeName = '/news';
-  _NewScreenState createState() => _NewScreenState();
+  LaserScreenState createState() => LaserScreenState();
 }
 
-class _NewScreenState extends State<NewScreen> {
+class LaserScreenState extends State<LaserScreen> {
   var _showOnlyfav = false;
   var _isInit = true;
   var _isLoading = false;
@@ -31,7 +31,7 @@ class _NewScreenState extends State<NewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('DR BITAN'),
+        title: const Text('LASER'),
         actions: <Widget>[
           PopupMenuButton(
             itemBuilder: (_) => [
@@ -66,11 +66,8 @@ class HogeApp extends StatelessWidget {
     // <1> Use FutureBuilder
     return FutureBuilder<QuerySnapshot>(
       // <2> Pass `Future<QuerySnapshot>` to future
-        future: FirebaseFirestore.instance.collection('news').get(),
+        future: FirebaseFirestore.instance.collection('laser').get(),
         builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-    return Center(child: CircularProgressIndicator());
-    } else {
           if (snapshot.hasData) {
             // <3> Retrieve `List<DocumentSnapshot>` from snapshot
             final List<DocumentSnapshot> documents = snapshot.data.docs;
@@ -78,14 +75,20 @@ class HogeApp extends StatelessWidget {
                 children: documents
                     .map((doc) => Card(
                   child: ListTile(
-                    title: Text(doc['contenu']+' by '+doc['auteur']),
-                    subtitle: Text(doc['date']),
+                    leading: ConstrainedBox(
+                        constraints:
+                        BoxConstraints(minWidth: 100, minHeight: 100),
+                        child: new Image.asset('assets/images/laser.jpg',width: 100,
+                          height: 100,
+                        )),
+                    title: Text(doc['title']),
+                    subtitle: Text(doc['texte']),
                   ),
                 ))
                     .toList());
           } else if (snapshot.hasError) {
             return Text('un probleme est survenu!');
-          }}
+          }
         });
   }
 }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shoppiz/main.dart';
 
 import '../widgets/main_drawer.dart';
 import '../screens/cart_screen.dart';
@@ -7,7 +8,8 @@ import '../widgets/products_grid.dart';
 import '../widgets/badge.dart';
 import '../providers/cart.dart';
 import '../providers/products.dart';
-
+import 'package:camera/camera.dart';
+import '../films/live_camera.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum FilterOptions {
@@ -15,6 +17,8 @@ enum FilterOptions {
   
   All,
 }
+
+
 
 class ImplantologieScreen extends StatefulWidget {
   static const routeName = '/implantologie';
@@ -27,11 +31,15 @@ class ImplantologieScreenState extends State<ImplantologieScreen> {
   var _isLoading = false;
 
 
+
   @override
   Widget build(BuildContext context) {
+    WidgetsFlutterBinding.ensureInitialized();
+
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('IMPLANTOLOGIE'),
+        title: const Text('VISIO DETECTION'),
         actions: <Widget>[
           PopupMenuButton(
             itemBuilder: (_) => [
@@ -50,19 +58,7 @@ class ImplantologieScreenState extends State<ImplantologieScreen> {
               });
             },
           ),
-          Consumer<Cart>(
-            builder: (_, cart, child) => Badge(
-              child: child,
-              value: cart.count.toString(),
-            ),
-            child: IconButton(
-                icon: Icon(
-                  Icons.shopping_cart,
-                ),
-                onPressed: () {
-                  Navigator.of(context).pushNamed(CartScreen.routeName);
-                }),
-          )
+
         ],
       ),
       drawer: MainDrawer(),
@@ -72,32 +68,60 @@ class ImplantologieScreenState extends State<ImplantologieScreen> {
 }
 
 class HogeApp extends StatelessWidget {
+  @override
+  List<CameraDescription> cameras;
+  CameraDescription camera;
+
 
   @override
-  Widget build(BuildContext context) {
-    // <1> Use FutureBuilder
-    return FutureBuilder<QuerySnapshot>(
-      // <2> Pass `Future<QuerySnapshot>` to future
-        future: FirebaseFirestore.instance.collection('implant').get(),
-        builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-    return Center(child: CircularProgressIndicator());
-    } else {
-          if (snapshot.hasData) {
-            // <3> Retrieve `List<DocumentSnapshot>` from snapshot
-            final List<DocumentSnapshot> documents = snapshot.data.docs;
-            return ListView(
-                children: documents
-                    .map((doc) => Card(
-                  child: ListTile(
-                    title: Text(doc['contenu']+' '+doc['auteur']),
-                    subtitle: Text(doc['marque']),
-                  ),
-                ))
-                    .toList());
-          } else if (snapshot.hasError) {
-            return Text('un probleme est survenu!');
-          }
-        }});
+  void initState() {
+    print('init oooooooooooooooooooooooooooooo');
+    availableCameras().then((availableCameras) {
+      cameras = availableCameras;
+      print('____________CAMERA__________________');
+      print(cameras.length);
+      camera = cameras.first;
+    });
   }
-}
+
+  Widget build(BuildContext context) {
+  return Scaffold(
+  appBar: AppBar(
+  title: Text("Détecteur"),
+  actions: <Widget>[
+  IconButton(
+  icon: Icon(Icons.info),
+  onPressed: aboutDialog,
+  ),
+  ],
+  ),
+  body: Container(
+  child:Center(
+  child: Column(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: <Widget>[
+
+  ButtonTheme(
+  minWidth: 160,
+  child: RaisedButton(
+  child: Text("analyse video  "),
+  onPressed:() {
+  Navigator.push(context, MaterialPageRoute(
+  builder: (context) => LiveFeed(cameras),
+  ),
+  );
+  },
+  ),
+  ),
+
+  ],
+  ),
+  ),
+  ),
+  );
+  }
+
+  aboutDialog(){
+  }
+
+  }

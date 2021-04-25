@@ -15,13 +15,13 @@ enum FilterOptions {
   All,
 }
 
-class HistoriqueScreen extends StatefulWidget {
-  static const routeName = '/historique';
+class rdvencoursScreen extends StatefulWidget {
+  static const routeName = '/rdvencours';
   @override
-  HistoriqueScreenState createState() => HistoriqueScreenState();
+  rdvencoursScreenState createState() => rdvencoursScreenState();
 }
 
-class HistoriqueScreenState extends State<HistoriqueScreen> {
+class rdvencoursScreenState extends State<rdvencoursScreen> {
   var _showOnlyfav = false;
   var _isInit = true;
   var _isLoading = false;
@@ -31,7 +31,7 @@ class HistoriqueScreenState extends State<HistoriqueScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('HISTORIQUE'),
+        title: const Text('RDV en cours'),
         actions: <Widget>[
           PopupMenuButton(
             itemBuilder: (_) => [
@@ -50,7 +50,6 @@ class HistoriqueScreenState extends State<HistoriqueScreen> {
               });
             },
           ),
-
         ],
       ),
       drawer: MainDrawer(),
@@ -91,38 +90,38 @@ class HogeApp extends StatelessWidget {
     // <1> Use FutureBuilder
     return FutureBuilder<QuerySnapshot>(
       // <2> Pass `Future<QuerySnapshot>` to future
-        future: FirebaseFirestore.instance.collection('rdv').get(),
+        future: FirebaseFirestore.instance.collection('rdvencours').get(),
         builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-    return Center(child: CircularProgressIndicator());
-    } else {
-      if (snapshot.hasData) {
-        // <3> Retrieve `List<DocumentSnapshot>` from snapshot
-        final List<DocumentSnapshot> documents = snapshot.data.docs;
-        return ListView(
-            children: documents
-                .map((doc) =>
-                Card(
-                  elevation: 20.0,
-                  child: ListTile(
-                    //leading: Icon(Icons.settings, size: 20.0),
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            if (snapshot.hasData) {
+              // <3> Retrieve `List<DocumentSnapshot>` from snapshot
+              final List<DocumentSnapshot> documents = snapshot.data.docs;
+              return ListView(
+                  children: documents
+                      .map((doc) =>
+                      Card(
+                        elevation: 20.0,
+                        child: ListTile(
+                          //leading: Icon(Icons.settings, size: 20.0),
 
-                    leading: ConstrainedBox(
-                        constraints:
-                        BoxConstraints(minWidth: 100, minHeight: 100),
-                      child: new Image.asset('assets/images/dent1.jpg',width: 100,
-                          height: 100,
-                        )),
+                          leading: ConstrainedBox(
+                              constraints:
+                              BoxConstraints(minWidth: 100, minHeight: 100),
+                              child: new Image.asset('assets/images/dent1.jpg',width: 100,
+                                height: 100,
+                              )),
 
-                    //  leading: Image(image: AssetImage('images/dent1.jpg')),
-                    title: Text(doc['title'] + ' du ' + doc['jour'] + ' ' +
-                        doc['nbjour'] + ' ' + doc['mois'] + ' ' + doc['annee']),
-                    subtitle: Text(doc['description']),
-                    trailing: Icon(Icons.keyboard_arrow_right),
-                    onTap: () {
-                      print('Settings was tapped');
-                      _showErrorDialog(doc['detail'],context);
-                 /*     FirebaseFirestore.instance.collection('rdv').add(
+                          //  leading: Image(image: AssetImage('images/dent1.jpg')),
+                          title: Text(doc['title'] + ' du ' + doc['jour'] + ' ' +
+                              doc['nbjour'] + ' ' + doc['mois'] + ' ' + doc['annee']),
+                          subtitle: Text(doc['description']),
+                          trailing: Icon(Icons.keyboard_arrow_right),
+                          onTap: () {
+                            print('Settings was tapped');
+                            _showErrorDialog(doc['detail'],context);
+                            /*     FirebaseFirestore.instance.collection('rdv').add(
                             {
                             "annee" :"2021",
                             "description" : "bridge a controler",
@@ -135,15 +134,15 @@ class HogeApp extends StatelessWidget {
                           print(value.id);
                         });
                         */
-                      //Navigator.pushNamed(context, TestConfirmation.id);
-                    },
-                  ),
-                ))
-                .toList());
-      } else if (snapshot.hasError) {
-        return Text('un probleme est survenu!');
-      }
-    }
+                            //Navigator.pushNamed(context, TestConfirmation.id);
+                          },
+                        ),
+                      ))
+                      .toList());
+            } else if (snapshot.hasError) {
+              return Text('un probleme est survenu!');
+            }
+          }
         });
   }
 }
