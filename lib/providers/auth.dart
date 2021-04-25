@@ -37,8 +37,6 @@ class Auth with ChangeNotifier {
       TraceUser(email, user.uid,"signup");
       if (!user.emailVerified) {
         await user.sendEmailVerification();
-        return null;
-      } else{
         DateTime today = new DateTime.now();
         String dateSlug ="${today.day.toString().padLeft(2,'0')}-${today.month.toString().padLeft(2,'0')}-${today.year.toString()}";
         await
@@ -48,6 +46,8 @@ class Auth with ChangeNotifier {
         }).catchError((e) {
           print(e);
         });;
+        return null;
+      } else{
         return user.uid;}
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
@@ -71,7 +71,11 @@ class Auth with ChangeNotifier {
           password: password
       );
       User user = FirebaseAuth.instance.currentUser;
+      if (!user.emailVerified) {
+        erreur="Vous Devez cliquer sur le lien envoye par Mail pour activer votre compte";
+      }
       TraceUser(email, user.uid,"login");
+
       this._userId=user.uid;
     } on FirebaseAuthException catch (e) {
       if (e.code == 'user-not-found') {
