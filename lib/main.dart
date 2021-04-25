@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_core/firebase_core.dart';
-
+import 'package:shoppiz/screens/laser_screen.dart';
+import 'package:shoppiz/screens/nouveautes_screen.dart';
+import 'package:shoppiz/screens/rdvencours_screen.dart';
+import './screens/planning_screen.dart';
 import './screens/splash_screen.dart';
 import './screens/edit_product_screen.dart';
 import './screens/user_products_screen.dart';
@@ -17,9 +20,15 @@ import './providers/cart.dart';
 import './providers/orders.dart';
 import './screens/auth screen.dart';
 import './providers/auth.dart';
+import './providers/auth.dart';
+import 'package:camera/camera.dart';
+import './films/live_camera.dart';
+
+List<CameraDescription> cameras;
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  cameras = await availableCameras();
   await Firebase.initializeApp();
   runApp(MyApp());
 }
@@ -56,7 +65,7 @@ class MyApp extends StatelessWidget {
                 accentColor: Colors.deepOrange,
                 fontFamily: 'Lato'),
             home: auth.isAuth
-                ? HistoriqueScreen()
+                ? rdvencoursScreen()
                 : FutureBuilder(
                     future: auth.tryAutoLogin(),
                     builder: (ctx, snapShot) =>
@@ -67,15 +76,20 @@ class MyApp extends StatelessWidget {
             routes: {
               ProductsDetailsScreen.routeName: (ctx) => ProductsDetailsScreen(),
               CartScreen.routeName: (ctx) => CartScreen(),
-              EventsScreen.routeName: (ctx) => EventsScreen(),
+              EventScreen.routeName: (ctx) => EventScreen(),
               HistoriqueScreen.routeName: (ctx) => HistoriqueScreen(),
               ImplantologieScreen.routeName: (ctx) => ImplantologieScreen(),
               OrdersScreen.routeName: (ctx) => OrdersScreen(),
               NewScreen.routeName: (ctx) => NewScreen(),
               UserProductsScreen.routeName: (ctx) => UserProductsScreen(),
               EditProductsScreen.routeName: (ctx) => EditProductsScreen(),
+              rdvencoursScreen.routeName: (ctx) => rdvencoursScreen(),
+              NouveautesScreen.routeName: (ctx) => NouveautesScreen(),
+              LaserScreen.routeName: (ctx) => LaserScreen(),
+              planningScreen.routeName: (ctx) => planningScreen(),
             },
           ),
+
         ));
   }
 }
