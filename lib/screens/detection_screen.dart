@@ -5,6 +5,7 @@ import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image/image.dart' as img;
+import '../widgets/main_drawer.dart';
 
 import 'package:tflite/tflite.dart';
 import 'package:image_picker/image_picker.dart';
@@ -111,7 +112,6 @@ class DetectionScreenState extends State<DetectionScreen> {
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-
     List<Widget> stackChildren = [];
 
     stackChildren.add(
@@ -122,7 +122,7 @@ class DetectionScreenState extends State<DetectionScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                Text("Please Select an Image"),
+                Text("Selectioonez une photo SVP"),
               ],
             ),
           )
@@ -145,24 +145,27 @@ class DetectionScreenState extends State<DetectionScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Object Detector"),
+        title: Text("Detection et Analyse"),
       ),
       floatingActionButton: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           FloatingActionButton(
+            backgroundColor: Colors.deepPurple,
             heroTag: "Fltbtn2",
             child: Icon(Icons.camera_alt),
             onPressed: getImageFromCamera,
           ),
           SizedBox(width: 10,),
           FloatingActionButton(
+            backgroundColor: Colors.deepPurple,
             heroTag: "Fltbtn1",
             child: Icon(Icons.photo),
             onPressed: getImageFromGallery,
           ),
         ],
       ),
+      drawer: MainDrawer(),
       body: Container(
         alignment: Alignment.center,
         child:Stack(

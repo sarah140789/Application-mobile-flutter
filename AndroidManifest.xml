@@ -13,7 +13,7 @@
     <uses-permission android:name="android.permission.READ_SMS" />
 
    <application
-        android:label="shoppiz"
+        android:label="IDentiste"
         android:icon="@mipmap/ic_launcher">
         <activity
             android:name=".MainActivity"

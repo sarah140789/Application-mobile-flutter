@@ -162,6 +162,9 @@ class _AuthCardState extends State<AuthCard>
     });
     try {
       if (_authMode == AuthMode.Login) {
+
+        SharedPreferences.getInstance().then((myPrefs) => {myPrefs.setString('auteur',_authData['email'])});
+
         await Provider.of<Auth>(context, listen: false).login(
           _authData['email'],
           _authData['password'],
